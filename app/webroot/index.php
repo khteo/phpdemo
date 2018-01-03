@@ -1,111 +1,157 @@
-<?php
-/**
- * The Front Controller for handling every request
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.webroot
- * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+        <!--==============================BASIC CSS FILES================================ -->
+        <link rel="stylesheet" href="css/leaflet.css" />  
+        <link rel="stylesheet" href="css/font-awesome.css" />      
+        <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css" />         
+        <!--==============================//BASIC CSS FILES================================ -->
+        <!--==============================BASIC JAVASCRIPT FILES================================ -->
+        <script src="js/jquery-1.11.2.min.js"></script>
+        <script src="js/jquery-ui.js"></script>
+        <script src="js/bootstrap.min.js"></script>        
+        <script src="js/d3-3.5.0.min-3b564392.js" type="text/javascript"></script>        
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/leaflet.ajax.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <!--==============================//BASIC JAVASCRIPT FILES================================ -->
+        <!--==============================CONTAINS GEOJSON DATA FOR MRT POINTS AND LINES======== -->
+        <script src="data/MRTpoints.js"></script>
+        <script src="data/MRTlinesall.js"></script>
+        <!--==============================//CONTAINS GEOJSON DATA FOR MRT POINTS AND LINES======== -->
+        <!--==============================CUSTOM CSS FILES TO STYLE PAGE LAYOUT ACCORDING TO PERSONAL PREFERENCES======== -->
+        <link rel="stylesheet" href="css/custom.css" />        
+        <!--==============================//CUSTOM CSS FILES TO STYLE PAGE LAYOUT ACCORDING TO PERSONAL PREFERENCES======== -->
+    </head>
+    <body>        
+        <div class="navbar navbar-default navbar-fixed-top" style="z-index:5000;margin-bottom:300px">
+            <small class="navbar-brand" style="position:absolute;float:left;font-size:10px;z-index:100;margin-bottom:10px">Built with Leaflet and D3</small><br>
+            <div class="container">
+                <div class="navbar-header">                    
+                    <a class="navbar-brand">Singapore's Population</a>
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar-main">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a id="age-groups">Charts</a>           
+                        </li>
+                        <li>                
+                            <a id="show-pop-map">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="control-pop-map" checked />
+                                        </td>
+                                        <td>
+                                            &nbsp;Population
+                                        </td>
+                                    </tr>
+                                </table>
+                            </a>
+                        </li>
+                        <li>                
+                            <a id="show-mrt-map">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="control-mrt-map" checked />
+                                        </td>
+                                        <td>
+                                            &nbsp;MRT
+                                        </td>
+                                    </tr>
+                                </table>
+                            </a>
+                        </li>
+                        <li>                
+                            <a id="show-legend">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="control-legend" checked />
+                                        </td>
+                                        <td>
+                                            &nbsp;Legend
+                                        </td>
+                                    </tr>
+                                </table>
+                            </a>
+                        </li>
+                    </ul>
 
-/**
- * Use the DS to separate the directories in other defines
- */
-if (!defined('DS')) {
-	define('DS', DIRECTORY_SEPARATOR);
-}
-
-/**
- * These defines should only be edited if you have CakePHP installed in
- * a directory layout other than the way it is distributed.
- * When using custom settings be sure to use the DS and do not add a trailing DS.
- */
-
-/**
- * The full path to the directory which holds "app", WITHOUT a trailing DS.
- */
-if (!defined('ROOT')) {
-	define('ROOT', dirname(dirname(dirname(__FILE__))));
-}
-
-/**
- * The actual directory name for the "app".
- */
-if (!defined('APP_DIR')) {
-	define('APP_DIR', basename(dirname(dirname(__FILE__))));
-}
-
-/**
- * The absolute path to the "cake" directory, WITHOUT a trailing DS.
- *
- * Un-comment this line to specify a fixed path to CakePHP.
- * This should point at the directory containing `Cake`.
- *
- * For ease of development CakePHP uses PHP's include_path. If you
- * cannot modify your include_path set this value.
- *
- * Leaving this constant undefined will result in it being defined in Cake/bootstrap.php
- *
- * The following line differs from its sibling
- * /lib/Cake/Console/Templates/skel/webroot/index.php
- */
-//define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
-
-/**
- * This auto-detects CakePHP as a composer installed library.
- * You may remove this if you are not planning to use composer (not recommended, though).
- */
-$vendorPath = ROOT . DS . APP_DIR . DS . 'Vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'lib';
-$dispatcher = 'Cake' . DS . 'Console' . DS . 'ShellDispatcher.php';
-if (!defined('CAKE_CORE_INCLUDE_PATH') && file_exists($vendorPath . DS . $dispatcher)) {
-	define('CAKE_CORE_INCLUDE_PATH', $vendorPath);
-}
-
-/**
- * Editing below this line should NOT be necessary.
- * Change at your own risk.
- */
-if (!defined('WEBROOT_DIR')) {
-	define('WEBROOT_DIR', basename(dirname(__FILE__)));
-}
-if (!defined('WWW_ROOT')) {
-	define('WWW_ROOT', dirname(__FILE__) . DS);
-}
-
-// For the built-in server
-if (PHP_SAPI === 'cli-server') {
-	if ($_SERVER['REQUEST_URI'] !== '/' && file_exists(WWW_ROOT . $_SERVER['PHP_SELF'])) {
-		return false;
-	}
-	$_SERVER['PHP_SELF'] = '/' . basename(__FILE__);
-}
-
-if (!defined('CAKE_CORE_INCLUDE_PATH')) {
-	if (function_exists('ini_set')) {
-		ini_set('include_path', ROOT . DS . 'lib' . PATH_SEPARATOR . ini_get('include_path'));
-	}
-	if (!include 'Cake' . DS . 'bootstrap.php') {
-		$failed = true;
-	}
-} elseif (!include CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'bootstrap.php') {
-	$failed = true;
-}
-if (!empty($failed)) {
-	trigger_error("CakePHP core could not be found. Check the value of CAKE_CORE_INCLUDE_PATH in APP/webroot/index.php. It should point to the directory containing your " . DS . "cake core directory and your " . DS . "vendors root directory.", E_USER_ERROR);
-}
-
-App::uses('Dispatcher', 'Routing');
-
-$Dispatcher = new Dispatcher();
-$Dispatcher->dispatch(
-	new CakeRequest(),
-	new CakeResponse()
-);
+                    <ul class="nav navbar-nav navbar-right">    
+                        <li><a>                 
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input id="base0" type="radio" name="basemap" checked/>
+                                        </td>
+                                        <td>
+                                            &nbsp;Street
+                                        </td>                           
+                                    </tr>
+                                </table>
+                            </a>            
+                        </li>
+                        <li><a>                 
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input id="base1" type="radio" name="basemap" />
+                                        </td>
+                                        <td>
+                                            &nbsp;Terrain
+                                        </td>                           
+                                    </tr>
+                                </table>
+                            </a>            
+                        </li>
+                        <li><a>                 
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input id="base2" type="radio" name="basemap" />
+                                        </td>
+                                        <td>
+                                            &nbsp;Transport
+                                        </td>                           
+                                    </tr>
+                                </table>
+                            </a>            
+                        </li>
+                        <li><a>                 
+                                <table>
+                                    <tr>                           
+                                        <td>
+                                            <input id="slide" type="range" min="0" max="1" step="0.1" value="0.7">
+                                        </td>
+                                        <td>
+                                            &nbsp;Map&nbsp;Opacity
+                                        </td>
+                                    </tr>
+                                </table>
+                            </a>            
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="age-groups-container" class="leaflet-control-layers leaflet-control-layers-expanded leaflet-control" aria-haspopup="true" style="z-index:3;position:absolute;margin:100px;margin-left:200px;margin-top:70px;height:450px;width:1000px">   
+            <button id="close-age-groups" class="btn btn-danger pull-right"><i class="fa fa-times"></i></button>
+            <h4>Gender Age Groups</h4>
+            <div id="dashboard"></div>
+        </div>        
+        <!--==============================MAP IS RENDERED IN THIS DIV BLOCK================================ -->   
+        <div id="map"></div>
+        <!--=============================//MAP IS RENDERED IN THIS DIV BLOCK================================ -->          
+        <script src="js/main.js"></script>
+    </body>
+</html>
