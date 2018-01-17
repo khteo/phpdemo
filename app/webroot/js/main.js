@@ -29,8 +29,6 @@ $(document).ready(function() {
         zoomControl: true, maxZoom: 19
     }).fitBounds([[1.1379363227, 103.560519444], [1.53721940685, 104.129578999]]);
 
-    var hash = new L.Hash(map);
-
     var additional_attrib = 'created w. <a href="https://github.com/geolicious/qgis2leaf" target ="_blank">qgis2leaf</a> by <a href="http://www.geolicious.de" target ="_blank">Geolicious</a> & contributors<br>';
     var feature_group = new L.featureGroup([]);
     var layer_group = new L.layerGroup([]);
@@ -250,12 +248,12 @@ $(document).ready(function() {
         }
     }
 
-    //======================RENDER THE MRT LINES MAP LAYER=====================================
-    var MRTlinesallJSON = new L.geoJson(exp_MRTlinesall, {
+    //======================RENDER THE MRT LINES MAP LAYER=====================================    
+	var MRTlinesallJSON = new L.GeoJSON.AJAX("data/mrtlines.json", {
         onEachFeature: pop_MRTlinesall,
         style: doStyleMRTlinesall
     });
-
+	
     //=======================ADD TOOLTIP TO MRT POINTS ON THE MAP========================================
     function pop_MRTpoints(feature, layer) {
         var stationNo = Autolinker.link(String(feature.properties['STN_NO']));
@@ -272,21 +270,22 @@ $(document).ready(function() {
         layer.bindPopup(popupContent);
     }
 
-    //=======================RENDER MAP LAYER WITH MRT POINTS========================================
-    var MRTpointsJSON = new L.geoJson(exp_MRTpoints, {
-        onEachFeature: pop_MRTpoints,
+    //=======================RENDER MAP LAYER WITH MRT POINTS========================================    
+	//var MRTpointsJSON = new L.GeoJSON.AJAX("db_controller.php", {
+	var MRTpointsJSON = new L.GeoJSON.AJAX("data/mrtpoints.json", {
+		onEachFeature: pop_MRTpoints,
         pointToLayer: function(feature, latlng) {
             return L.circleMarker(latlng, {
                 radius: 6,
                 fillColor: '#ffffff',
                 color: '#000000',
-                weight: 1,
+                weight: 3,
                 opacity: 1.0,
                 fillOpacity: 1.0
             })
         }
     });
-
+		
     //===============ADD POPULATION HEATMAP LEGEND TO MAP=========================================
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function(map) {
@@ -298,11 +297,11 @@ $(document).ready(function() {
     legend.addTo(map);
 
     L.control.scale({options: {position: 'bottomleft', maxWidth: 100, metric: true, imperial: false, updateWhenIdle: false}}).addTo(map);
-
+	
+	feature_group.addLayer(MRTpointsJSON);
+	feature_group.addLayer(MRTlinesallJSON);
     feature_group.addLayer(popdensityJSON);
-    feature_group.addLayer(MRTlinesallJSON);
-    feature_group.addLayer(MRTpointsJSON);
-
+    
     feature_group.addTo(map);
 
     //===============================FORMAT THE MRT POINTS VIA JQUERY=================================================

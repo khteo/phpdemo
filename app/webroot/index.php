@@ -13,15 +13,10 @@
         <script src="js/jquery-ui.js"></script>
         <script src="js/bootstrap.min.js"></script>        
         <script src="js/d3-3.5.0.min-3b564392.js" type="text/javascript"></script>        
-        <script src="js/leaflet.js"></script>
-        <script src="js/leaflet-hash.js"></script>
+        <script src="js/leaflet.js"></script>        
         <script src="js/leaflet.ajax.js"></script>
         <script src="js/Autolinker.min.js"></script>
-        <!--==============================//BASIC JAVASCRIPT FILES================================ -->
-        <!--==============================CONTAINS GEOJSON DATA FOR MRT POINTS AND LINES======== -->
-        <script src="data/MRTpoints.js"></script>
-        <script src="data/MRTlinesall.js"></script>
-        <!--==============================//CONTAINS GEOJSON DATA FOR MRT POINTS AND LINES======== -->
+        <!--==============================//BASIC JAVASCRIPT FILES================================ -->        
         <!--==============================CUSTOM CSS FILES TO STYLE PAGE LAYOUT ACCORDING TO PERSONAL PREFERENCES======== -->
         <link rel="stylesheet" href="css/custom.css" />        
         <!--==============================//CUSTOM CSS FILES TO STYLE PAGE LAYOUT ACCORDING TO PERSONAL PREFERENCES======== -->

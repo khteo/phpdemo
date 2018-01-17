@@ -112,6 +112,10 @@ a{
     cursor:default;
 }
 
+#age-groups:hover {
+	cursor:pointer;
+}
+
 #age-groups-container {
     display:none;
 }
