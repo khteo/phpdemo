@@ -254,8 +254,10 @@ $(document).ready(function() {
         style: doStyleMRTlinesall
     });
 	
-    //=======================ADD TOOLTIP TO MRT POINTS ON THE MAP========================================
+    //=======================ADD TOOLTIP TO MRT POINTS ON THE MAP========================================	
     function pop_MRTpoints(feature, layer) {
+		
+		
         var stationNo = Autolinker.link(String(feature.properties['STN_NO']));
 
         var newStationNo = "";
@@ -265,13 +267,14 @@ $(document).ready(function() {
                 newStationNo += stationNo[i];
             }
         }
-
-        var popupContent = '<table><tr><td style="text-align:center"><h4>' + Autolinker.link(String(feature.properties['BUILDING_N'])) + '</h4><h5>' + newStationNo + '</h5></td></table>';
+	
+        var popupContent = '<table><tr><td style="text-align:center"><h4><input id="' + newStationNo + '" type="text" value="' + Autolinker.link(String(feature.properties['BUILDING_N'])) + '" /><button onclick="window.open(\'update_data.php?stn=' + newStationNo + '&number=\' + document.getElementById(\'' + newStationNo + '\').value.trim()); location.reload();">Save</button></h4><h5>' + newStationNo + '</h5></td></table>';
         layer.bindPopup(popupContent);
     }
-
+	
+	
     //=======================RENDER MAP LAYER WITH MRT POINTS========================================    
-	//var MRTpointsJSON = new L.GeoJSON.AJAX("db_controller.php", {
+	//var MRTpointsJSON = new L.GeoJSON.AJAX("get_data.php", {
 	var MRTpointsJSON = new L.GeoJSON.AJAX("data/mrtpoints.json", {
 		onEachFeature: pop_MRTpoints,
         pointToLayer: function(feature, latlng) {
