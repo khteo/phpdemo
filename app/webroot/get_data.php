@@ -1,24 +1,24 @@
 <?php
 	header('Content-type: application/json');
 
-	$servername = "127.0.0.1";
-	$username = "root";
-	$password = "";
-	$dbname = "sggeospatial";
+	$servername = getenv("DATABASE_SERVICE_NAME") ? getenv(strtoupper(getenv("DATABASE_SERVICE_NAME"))."_SERVICE_HOST") : "127.0.0.1";
+	$username = getenv("DATABASE_USER") ?: "root";
+	$password = getenv("DATABASE_PASSWORD") ?: "";
+	$dbname = getenv("DATABASE_NAME") ?: "sggeospatial";
 
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	// Check connection
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
-	} 
+	}
 
-	
+
 	$sql = "SELECT * FROM mrtpoints2";
 	$result = mysqli_query($conn, $sql);
-	
+
 	if (mysqli_num_rows($result) > 0) {
-		
+
 		echo '{';
 		echo '"type": "FeatureCollection",';
 		echo '"crs": {';
@@ -28,16 +28,16 @@
 		echo '}';
 		echo '},';
 		echo '"features": [';
-		
-		
+
+
 		$isFirstRow = true;
-		
+
 		// output data of each row
-		while($row = mysqli_fetch_assoc($result)) {	
+		while($row = mysqli_fetch_assoc($result)) {
 			if(!$isFirstRow) {
-				echo ',';	
+				echo ',';
 			}
-			
+
 			echo '{';
 			echo '"type": "Feature",';
 			echo '"properties": {';
@@ -53,14 +53,14 @@
 			echo $row["latitude"];
 			echo ']';
 			echo '}';
-			echo '}';	
-			
+			echo '}';
+
 			$isFirstRow = false;
 		} // end while loop
-		
+
 		echo ']';
 		echo '}';
-		
+
 	} else {
 		echo "0 results";
 	}
