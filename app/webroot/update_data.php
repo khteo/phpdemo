@@ -1,8 +1,8 @@
 <?php
-	$servername = "127.0.0.1";
-	$username = "root";
-	$password = "";
-	$dbname = "sggeospatial";
+	$servername = getenv("DATABASE_SERVICE_NAME") ? getenv(strtoupper(getenv("DATABASE_SERVICE_NAME"))."_SERVICE_HOST") : "127.0.0.1";
+	$username = getenv("DATABASE_USER") ?: "root";
+	$password = getenv("DATABASE_PASSWORD") ?: "";
+	$dbname = getenv("DATABASE_NAME") ?: "sggeospatial";
 
 	// Create connection
 	$conn = mysqli_connect($servername, $username, $password, $dbname);
