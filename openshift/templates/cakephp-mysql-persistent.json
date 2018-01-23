@@ -136,10 +136,7 @@
               "secret": "${GITHUB_WEBHOOK_SECRET}"
             }
           }
-        ],
-        "postCommit": {
-          "script": "./lib/Cake/Console/cake test app AllTests"
-        }
+        ]
       }
     },
     {
@@ -154,18 +151,7 @@
       },
       "spec": {
         "strategy": {
-          "type": "Recreate",
-          "recreateParams": {
-            "pre": {
-              "failurePolicy": "Retry",
-              "execNewPod": {
-                "command": [
-                  "./migrate-database.sh"
-                ],
-                "containerName": "cakephp-mysql-persistent"
-              }
-            }
-          }
+          "type": "Recreate"
         },
         "triggers": [
           {

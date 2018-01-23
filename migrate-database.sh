@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e 
+set -e
 
 if [ ! -f app/Config/Schema/schema.php ]; then
 	echo "Generating database schema 'cake schema generate' ..."
